@@ -21,24 +21,6 @@ npm install --save mage-module-maintenance
 Usage
 -----
 
-### Boilerplate
-
-> lib/modules/maintenance/index.ts
-
-```typescript
-import {
-  setupMaintenanceHooks
-} from 'mage-module-maintenance'
-
-// Then, at the bottom of the file, after
-// all your `mage.useModules` and `mage.useApplicationModules()`
-// calls
-setupMaintenanceHooks(mage)
-```
-
-This bit of code will encapsulate all user commands into a bit of code
-which will check the current maintenance status.
-
 ### Module creation
 
 > lib/modules/maintenance/index.ts
@@ -49,11 +31,13 @@ import maintenance, {
 } from 'mage-module-maintenance'
 
 class MaintenanceModule extends AbstractMaintenanceModule {
-   public async onStart(message: maintenance.IMessage) {
-　　　　// Store the maintenance message
+   // Store the maintenance message
+   public async store(message: maintenance.IMessage) {
+　　　　
    }
 
-   public async onEnd(message: maintenance.IMessage) {
+   // Load the maintenance status from persistent storage
+   public async load() {
 
    }
 }
@@ -65,6 +49,7 @@ Then, create the following user commands:
 
   * start
   * end
+  * status
 
 > lib/modules/maintenance/usercommands/start.ts
 
@@ -78,9 +63,9 @@ import { Acl } from 'mage-validator'
 
 // User command
 export default class {
-  @Acl('*')
-  public static async execute(state: mage.core.IState) {
-    return MaintenanceModule.start(state) // create the same user command for end
+  @Acl('*')  // You might want to customise this to your need!
+  public static async execute(_state: mage.core.IState) {
+    return MaintenanceModule.start() // create the same user command for end and status!
   }
 }
 ```
@@ -107,7 +92,7 @@ the count goes to zero before starting your actual maintenance process.
 ```typescript
 // mage
 import * as mage from 'mage'
-import { OnMaintenance, AllowAccess } from 'mage-module-maintenance'
+import { OnMaintenance, AllowAccess } from '../../maintenance'
 
 // validation tools
 import { Acl } from 'mage-validator'
@@ -132,7 +117,7 @@ players to access the game (normally, members of your development team).
 ```typescript
 // mage
 import * as mage from 'mage'
-import { OnMaintenance, AllowAccess, AllowUser, DenyUser } from 'mage-module-maintenance'
+import { OnMaintenance, AllowAccess, AllowUser, DenyUser } from '../../maintenance'
 
 // validation tools
 import { Acl } from 'mage-validator'
