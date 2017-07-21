@@ -131,7 +131,7 @@ function executeHook(state: mage.core.IState, _data: any, batch: ICommandBatch, 
  * @returns
  */
 export function OnMaintenance(isAllowed: boolean) {
-  return function (target: any, key: string) {
+  return function (target: any, key: string = 'execute') {
     if (key !== 'execute') {
       throw new Error('OnMaintenance must be placed over a user command\'s execute method')
     }

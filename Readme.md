@@ -87,10 +87,23 @@ for instance, you may want to allow users to complete their current match, then
 keep track of the number of active match in your admin dashboard and wait until
 the count goes to zero before starting your actual maintenance process.
 
+> lib/modules/match/usercommands/someAction.js
+
+```javascript
+const { OnMaintenance, AllowAccess } from '../../maintenance'
+
+OnMaintenance(AllowAccess)(exports)
+
+exports.acl = ['*']
+
+exports.execute = async function (state) {
+  // your command code
+}
+```
+
 > lib/modules/match/usercommands/someAction.ts
 
 ```typescript
-// mage
 import * as mage from 'mage'
 import { OnMaintenance, AllowAccess } from '../../maintenance'
 
